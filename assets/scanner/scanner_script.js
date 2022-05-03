@@ -14,6 +14,7 @@ $(function(){
   let canvas_container = $(".canvas-container");
   let reqAnim;
   let once = true;
+  let code_output;
 
   // Add Animation when QR Scan Animation is click
   scan_animation.click(()=> {
@@ -48,6 +49,7 @@ $(function(){
 
       // If camera detects a QR Code
       if(code && once){
+        code_output = code;
         canvas_container.addClass("animate__bounceOut");
         once = false;
         setTimeout(function(){
@@ -63,37 +65,50 @@ $(function(){
     reqAnim = requestAnimationFrame($.fn.tick);
   };
 
+  // Method for displaying, either the success or failed animation 
+  $.fn.successOrFailed = function(status, message){
+    process_container.addClass("animate__bounceOut");
+    setTimeout(function(){
+      process_container.addClass("d-none");
+      process_container.removeClass("animate__animated animate__bounceIn animate__bounceOut");
+      status_container.removeClass("d-none");
+      status_container.addClass("animate__animated animate__bounceIn");
+
+      if(status == "success"){
+        success_animation.play();
+        success_animation.classList.remove("d-none");
+        status_text.text(message);
+      } else if(status == "failed"){
+        failed_animation.play();
+        failed_animation.classList.remove("d-none");
+        status_text.text(message);
+      }
+
+    },1000);
+  };
+
   //Method that process the data with database
   $.fn.processData = function(){
     process_container.removeClass("d-none");
     process_container.addClass("animate__animated animate__bounceIn");
 
-    let bool = [true, false];
-
-    // If process is done code here
-    if(bool[Math.floor(Math.random()*bool.length)]){
-      process_container.addClass("animate__bounceOut");
-      setTimeout(function(){
-        process_container.addClass("d-none");
-        process_container.removeClass("animate__animated animate__bounceIn animate__bounceOut");
-        status_container.removeClass("d-none");
-        status_container.addClass("animate__animated animate__bounceIn");
-        success_animation.play();
-        success_animation.classList.remove("d-none");
-        status_text.text("Success");
-      },1000);
-    } else {
-      process_container.addClass("animate__bounceOut");
-      setTimeout(function(){
-        process_container.addClass("d-none");
-        process_container.removeClass("animate__animated animate__bounceIn animate__bounceOut");
-        status_container.removeClass("d-none");
-        status_container.addClass("animate__animated animate__bounceIn");
-        failed_animation.play();
-        failed_animation.classList.remove("d-none");
-        status_text.text("Failed! Try Again");
-      },1000);
-    }
+    $.ajax({
+      url: "dtrscan/DTR_Controller/saveData/" + code_output.data,
+      type: "POST",
+      dataType: "text",  
+      cache: false,
+      success: function(dataResult){
+        var dataResult = JSON.parse(dataResult);
+        if(dataResult.statusCode==200){
+          $.fn.successOrFailed("success", "Success");
+        } else {
+          $.fn.successOrFailed("failed", "Failed Try Again!");
+        }
+      }, 
+      error: function(xhr, status, error){
+        $.fn.successOrFailed("failed", "Error QR Code");
+      },
+    });
   };
 
   // Scan again the qr code
