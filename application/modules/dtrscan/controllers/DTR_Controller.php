@@ -21,7 +21,13 @@ class DTR_Controller extends MY_Controller
 	// Then returns a 200 status code after inserting
 	public function saveData(){
 		$code = $this->uri->segment(4);
-		$this->DTR_Model->save($code);	
+		
+		if($this->DTR_Model->checkExistData($code)){
+			$this->DTR_Model->save($code);	
+		}
+
+		$this->DTR_Model->updateTime($code);
+
 		echo json_encode(array(
 			"statusCode"=>200,
 		));

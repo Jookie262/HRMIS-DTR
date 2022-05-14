@@ -106,7 +106,7 @@ $(function(){
         }
       }, 
       error: function(xhr, status, error){
-        $.fn.successOrFailed("failed", "Error QR Code");
+        $.fn.successOrFailed("failed", error);
       },
     });
   };
