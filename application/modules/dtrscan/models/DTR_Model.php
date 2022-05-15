@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class DTR_Model extends MY_Controller 
 {
-    protected $date, $time;
+    protected $date, $time, $table;
 
     public function __construct()
 	{
@@ -13,6 +13,7 @@ class DTR_Model extends MY_Controller
         date_default_timezone_set('Asia/Manila');
         $this->date = date("Y-m-d");
         $this->time = date("H:i:s");
+        $this->table = "tblempqrscan";
         //$this->time = date("H:i:s", mktime(18,15,0));
     }
 
@@ -23,7 +24,7 @@ class DTR_Model extends MY_Controller
             'dtrDate' => $this->date,
             $col => NULL,
         ));
-        $query = $this->db->get('tblempdtr');
+        $query = $this->db->get($this->table);
         return $query->num_rows() > 0;
     }
 
@@ -31,7 +32,7 @@ class DTR_Model extends MY_Controller
     public function getLate($emp) {
         $this->db->where('empNumber', $emp);
         $this->db->where('dtrDate', $this->date);
-        $query = $this->db->get('tblempdtr');
+        $query = $this->db->get($this->table);
         $row = $query->row_array();
         return $row['late'];
     } 
@@ -41,7 +42,7 @@ class DTR_Model extends MY_Controller
     {
         $this->db->where('empNumber',$emp);
         $this->db->where('dtrDate',$this->date);
-        $query = $this->db->get('tblempdtr');
+        $query = $this->db->get($this->table);
         return !$query->num_rows() > 0;
     }
 
@@ -53,14 +54,14 @@ class DTR_Model extends MY_Controller
             'dtrDate' => $this->date,
         );
 
-        $this->db->insert('tblempdtr', $data);
+        $this->db->insert($this->table, $data);
     }
 
     // Updates Time 
     public function updateTime($emp){
         $this->db->where('empNumber',$emp);
         $this->db->where('dtrDate',$this->date);
-        $this->db->update('tblempdtr', $this->timeData($emp));
+        $this->db->update($this->table, $this->timeData($emp));
     }
 
     // Method that calculate minutes 
