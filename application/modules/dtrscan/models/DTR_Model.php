@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class DTR_Model extends MY_Controller 
 {
-    protected $date, $time, $table;
+    protected $date, $time, $table, $sched;
 
     public function __construct()
 	{
@@ -14,7 +14,7 @@ class DTR_Model extends MY_Controller
         $this->date = date("Y-m-d");
         $this->time = date("H:i:s");
         $this->table = "tblempqrscan";
-        //$this->time = date("H:i:s", mktime(18,15,0));
+        //$this->time = '7:30 PM';
     }
 
     // Returns true if the column is null
@@ -57,6 +57,11 @@ class DTR_Model extends MY_Controller
         $this->db->insert($this->table, $data);
     }
 
+    // Return the status when scanning (Time In or Out, Break In or Out or Overtime In or Out)
+    public function returnStatus() {
+        return $this->sched == null ? "" : $this->sched;
+    }
+
     // Updates Time 
     public function updateTime($emp){
         $this->db->where('empNumber',$emp);
@@ -92,6 +97,7 @@ class DTR_Model extends MY_Controller
         // 12:00 AM until 7:29 AM
         if(strtotime($now) < strtotime($inAm_start)) {
             $data = array( 'inAM' => $now);
+            $this->sched = "Time In";
         }
         
         // Late Time IN
@@ -123,6 +129,7 @@ class DTR_Model extends MY_Controller
             } else {
                 $data = array( 'outBreak' => $now);
             }
+            $this->sched = "Break Out";
            
         }
 
@@ -131,6 +138,7 @@ class DTR_Model extends MY_Controller
         // (before 1:30 PM) and (after 1:00 PM) 
         elseif(strtotime($now) <= strtotime($inBreak_end) and strtotime($inBreak_start) <= strtotime($now)){
             $data = array( 'inBreak' => $now);
+            $this->sched = "Break In";
         }
 
         // OutPM
@@ -138,6 +146,7 @@ class DTR_Model extends MY_Controller
         // (before 6:00 PM) and (after 5:00 PM)
         elseif(strtotime($now) <= strtotime($outPM_end) and strtotime($outPM_start) <= strtotime($now)){
             $data = array( 'outPM' => $now);
+            $this->sched = "Time Out";
         }
 
         // Overtime Out
@@ -145,6 +154,7 @@ class DTR_Model extends MY_Controller
         // if the inOvertime is not null
         elseif(!$this->checkIfNull($emp, "inOvertime")){
             $data = array( 'outOvertime' => $now);
+            $this->sched = "Overtime Out";
         }
 
         // Overtime In 
@@ -152,6 +162,7 @@ class DTR_Model extends MY_Controller
         // (after 6:00 PM ) and If the outPM column is not null
         elseif(strtotime($outPM_end) < strtotime($now) and !$this->checkIfNull($emp, "outPM")){
             $data = array( 'inOvertime' => $now);
+            $this->sched = "Overtime In";
         }
 
         return $data;

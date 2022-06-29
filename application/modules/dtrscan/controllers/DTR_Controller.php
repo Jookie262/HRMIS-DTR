@@ -30,6 +30,7 @@ class DTR_Controller extends MY_Controller
 
 		echo json_encode(array(
 			"statusCode"=>200,
+			"statusSched"=>$this->DTR_Model->returnStatus()
 		));
 	}
 }

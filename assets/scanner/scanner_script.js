@@ -100,7 +100,7 @@ $(function(){
       success: function(dataResult){
         var dataResult = JSON.parse(dataResult);
         if(dataResult.statusCode==200){
-          $.fn.successOrFailed("success", "Success");
+          $.fn.successOrFailed("success", dataResult.statusSched + " Success");
         } else {
           $.fn.successOrFailed("failed", "Failed Try Again!");
         }
