@@ -109,6 +109,9 @@ $(function(){
         $.fn.successOrFailed("failed", error);
       },
     });
+
+    // Open Camera after 5 seconds
+    setTimeout(function(){ again_button.click() }, 5000);
   };
 
   // Scan again the qr code
