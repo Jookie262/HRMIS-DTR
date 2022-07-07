@@ -15,6 +15,7 @@ $(function(){
   let reqAnim;
   let once = true;
   let code_output;
+ 
 
   // Add Animation when QR Scan Animation is click
   scan_animation.click(()=> {
@@ -133,5 +134,23 @@ $(function(){
       $.fn.openCamera();
     },1000);
   });
+
+  // Time Format
+  $.fn.formatAMPM = function(){
+    let date = new Date();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+
+    $("#hour").text(hours);
+    $("#minutes").text(minutes);
+    $("#meridiem").text(ampm);
+  };
+
+  // Set Interval
+  setInterval($.fn.formatAMPM,1000);
 
 });

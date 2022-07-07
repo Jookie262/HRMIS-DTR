@@ -87,3 +87,33 @@ form button, .status-container button {
 	 transition: 0.25s ease;
 	 box-shadow: inset 0 0 0 0.125em #00005c;
 }
+
+/* Clock CSS */
+.clock {
+	display: flex;
+	width: 270px;
+	height: 50px;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 5px;
+}
+
+.clock > div {
+	background-color: white;
+	height: 100%;
+	width: 80px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 30px;
+	font-weight: 800;
+	border-radius: 5px;
+	font-family: "Arial";
+	color:  #2A4B75;
+}
+
+.clock > span {
+	color: white;
+	font-weight: bolder;
+	font-size: 30px;
+}

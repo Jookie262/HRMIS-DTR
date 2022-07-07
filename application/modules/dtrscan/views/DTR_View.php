@@ -31,6 +31,14 @@
 			</div>
 		</div>
 
+		<div class="clock">
+			<div id="hour" class="shadow"> 00 </div>
+			<span>:</span>
+			<div id="minutes" class="shadow"> 00 </div>
+			<span> </span>
+			<div id="meridiem" class="shadow"> AM </div>
+		</div>
+
 		<div class="middle">
 			<!-- Card -->
 			<div class="container d-flex justify-content-center align-items-center mt-4" id="card-container">
@@ -69,10 +77,12 @@
 				</div>
 			</div>
 		</div>
+
+
 		
-		<div class="bottom text-white mt-4">
+		<!-- <div class="bottom text-white mt-4">
 			<b>Always Check the Time and Date of the Device!</b>
-		</div>
+		</div> -->
 		
 	</div>
 	
